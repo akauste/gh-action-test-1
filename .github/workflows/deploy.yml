@@ -11,16 +11,19 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Cache deps
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       # - name: Upgrade to node 18
       #   uses: actions/setup-node@v3
       #   with:
       #     node-version: 18
+      - name: Cache deps
+        id: cache
+        uses: actions/cache@v3
+        with:
+          #path: ~/.npm
+          path: node_modules
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install deps
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Run tests
         run: npm test
@@ -33,15 +36,14 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache deps
+        id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          #path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      # - name: Upgrade to node 18
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18
       - name: Install deps
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build
         run: npm run build
