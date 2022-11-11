@@ -4,6 +4,7 @@ on:
     branches:
       - main
     paths-ignore:
+      # Dummy 2
       - '.github/workflow/*'
 jobs:
   test:
